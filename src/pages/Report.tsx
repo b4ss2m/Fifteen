@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { dayAdd, fmtMin, isDay } from '../../shared/time';
 import { ReportCard, type Trend } from '../components/ReportCard';
+import { TrendCard } from '../components/TrendCard';
 import { Icon } from '../components/ui';
 import { minuteOfDay, relativeDay, shortDay, today, weekdayName } from '../lib/dates';
 import { Link, navigate, useSearch } from '../lib/router';
@@ -22,11 +23,6 @@ export function Report() {
   const before = app.summaryFor(lastWeek);
   const versus = `last ${weekdayName(day)}`;
   const trend: Trend | null = before.focusMin > 0 ? { pct: Math.round(((sum.focusMin - before.focusMin) / before.focusMin) * 100), versus } : null;
-
-  const week = Array.from({ length: 7 }, (_, i) => {
-    const d = dayAdd(day > dayAdd(t, -3) ? t : dayAdd(day, 3), i - 6);
-    return { day: d, score: app.summaryFor(d).score };
-  });
 
   const reportAt = app.me.settings.reportAt;
   const final = day < t || minuteOfDay(app.now) >= reportAt;
@@ -55,11 +51,10 @@ export function Report() {
         categories={app.me.categories}
         trend={trend}
         versus={versus}
-        week={week}
-        activeDay={day}
         final={final}
-        onPickDay={go}
       />
+
+      <TrendCard onPickDay={go} />
 
       <p className="report-note faint">
         {day === t && !final ? `Today’s report closes at ${fmtMin(reportAt)}. ` : ''}

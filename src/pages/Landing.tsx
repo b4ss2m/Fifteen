@@ -7,10 +7,27 @@ import { Timeline } from '../components/Timeline';
 import { Icon, Logo, ThemeToggle } from '../components/ui';
 import { DEMO_CATEGORIES, REPORT_ENTRIES, SHOWCASE_ENTRIES, SHOWCASE_NOW, SHOWCASE_SPANS } from '../lib/demo';
 import { Link } from '../lib/router';
+import { useTheme } from '../lib/theme';
 
+/**
+ * A phone showing the given screen, with a second one tucked behind it in the other theme
+ * as a quiet hint that both exist.
+ */
 function Phone({ children, label }: { children: ReactNode; label: string }) {
+  const other = useTheme() === 'dark' ? 'light' : 'dark';
   return (
     <figure className="phone" aria-label={label}>
+      <div className="phone-back" data-theme={other} aria-hidden="true">
+        <Handset>{children}</Handset>
+      </div>
+      <Handset>{children}</Handset>
+    </figure>
+  );
+}
+
+function Handset({ children }: { children: ReactNode }) {
+  return (
+    <>
       <div className="phone-body">
         <span className="phone-island" aria-hidden="true" />
         <div className="phone-status num" aria-hidden="true">
@@ -29,7 +46,7 @@ function Phone({ children, label }: { children: ReactNode; label: string }) {
         </div>
         <span className="phone-home" aria-hidden="true" />
       </div>
-    </figure>
+    </>
   );
 }
 
@@ -85,7 +102,7 @@ function PulseScreen() {
           end={15 * 60 + 30}
           interval={15}
           categories={DEMO_CATEGORIES}
-          suggestion={{ top: [1, 2, 3, 4], likely: 1, tag: 'API redesign' }}
+          suggestion={{ top: [1, 2, 3, 4], likely: 1, tag: 'New API' }}
           recentTags={() => []}
           onLog={() => {}}
         />

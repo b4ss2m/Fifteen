@@ -20,14 +20,24 @@ export function TrackingControl({ variant }: { variant: 'bar' | 'rail' }) {
   const nowMin = minuteOfDay(app.now);
   const { kind, untilMin, nextPulseMin } = app.tracking;
 
+  // The end time moves in steps of the check-in interval, from the next boundary to the end of the day.
   const cap = s.rollover + 1440;
-  const options: number[] = [];
-  for (let m = (Math.floor(nowMin / 30) + 1) * 30; m <= cap && options.length < 24; m += 30) options.push(m);
-  const fallback = s.dayEnd > nowMin + 15 ? s.dayEnd : Math.min(cap, (Math.floor(nowMin / 30) + 4) * 30);
-  const [until, setUntil] = useState(fallback);
-  const untilValue = options.includes(until) || until === s.dayEnd ? until : fallback;
-  if (s.dayEnd > nowMin && !options.includes(s.dayEnd)) options.push(s.dayEnd);
-  options.sort((a, b) => a - b);
+  const step = s.interval;
+  const first = Math.min(cap, (Math.floor(nowMin / step) + 1) * step);
+  const clamp = (m: number) => Math.min(cap, Math.max(first, Math.round(m / step) * step));
+  const fallback = s.dayEnd > nowMin + 15 ? s.dayEnd : clamp(nowMin + 120);
+  const [picked, setPicked] = useState<number | null>(null);
+  const until = clamp(picked ?? fallback);
+  // Near the end of the day several shortcuts would land on the same time; only the first is kept.
+  const presets = (
+    [
+      ['1 hour', clamp(nowMin + 60)],
+      ['2 hours', clamp(nowMin + 120)],
+      ['4 hours', clamp(nowMin + 240)],
+      ...(s.dayEnd > nowMin + 15 ? [['End of workday', s.dayEnd]] : []),
+      ['End of day', cap],
+    ] as Array<[string, number]>
+  ).filter(([, m], i, all) => all.findIndex(([, other]) => other === m) === i);
 
   return (
     <div className={`track track-${variant}${kind ? ' track-on' : ''}`}>
@@ -65,22 +75,33 @@ export function TrackingControl({ variant }: { variant: 'bar' | 'rail' }) {
               Every {s.interval} minutes Fifteen asks what you just did. Anything you don’t answer shows up as a gap.
             </p>
           </header>
-          <label className="field">
-            <span>Track until</span>
-            <select className="select num" value={untilValue} onChange={(e) => setUntil(Number(e.target.value))}>
-              {options.map((m) => (
-                <option key={m} value={m}>
-                  {fmtMin(m)}
-                  {m === s.dayEnd ? ' · end of workday' : ''}
-                </option>
+          <div className="until">
+            <span className="until-label">Track until</span>
+            <div className="until-pick">
+              <button type="button" className="icon-btn until-step" onClick={() => setPicked(until - step)} disabled={until <= first} aria-label={`${step} minutes earlier`}>
+                <Icon name="minus" />
+              </button>
+              <output className="until-time num" aria-live="polite">
+                {fmtMin(until)}
+              </output>
+              <button type="button" className="icon-btn until-step" onClick={() => setPicked(until + step)} disabled={until >= cap} aria-label={`${step} minutes later`}>
+                <Icon name="plus" />
+              </button>
+            </div>
+            <span className="faint num">{fmtDur(Math.max(step, until - nowMin))} from now</span>
+            <div className="chips until-presets">
+              {presets.map(([label, m]) => (
+                <button type="button" key={label} className={`chip${m === until ? ' chip-on' : ''}`} onClick={() => setPicked(m)}>
+                  {label}
+                </button>
               ))}
-            </select>
-          </label>
+            </div>
+          </div>
           <button
             className="btn btn-primary btn-block"
             onClick={() => {
               setAsking(false);
-              void app.startTracking(untilValue);
+              void app.startTracking(until);
             }}
           >
             Start tracking
@@ -102,6 +123,7 @@ function TodayAside() {
       <div className="aside-top">
         <ThemeToggle onChange={(theme) => void app.updateSettings({ theme })} />
       </div>
+      <TrackingControl variant="rail" />
       <section className="card">
         <h3 className="card-title">Today so far</h3>
         <div className="tally">
@@ -207,7 +229,6 @@ export function Shell({ children }: { children: ReactNode }) {
           )}
         </button>
         <div className="rail-foot">
-          <TrackingControl variant="rail" />
           <span className="rail-user faint">{app.demo ? 'Demo · nothing is saved' : app.me.email}</span>
         </div>
       </nav>
