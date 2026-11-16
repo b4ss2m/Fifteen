@@ -4,7 +4,7 @@ import { minuteOfDay, today } from '../lib/dates';
 import { Link, usePath } from '../lib/router';
 import { useApp } from '../lib/store';
 import { LogSheet } from './LogSheet';
-import { Icon, Logo, Sheet, type IconName } from './ui';
+import { Icon, Logo, Sheet, ThemeToggle, type IconName } from './ui';
 
 const NAV: Array<{ path: string; label: string; icon: IconName }> = [
   { path: '', label: 'Today', icon: 'thread' },
@@ -99,6 +99,9 @@ function TodayAside() {
   const total = sum.loggedMin + sum.gapMin;
   return (
     <aside className="aside">
+      <div className="aside-top">
+        <ThemeToggle onChange={(theme) => void app.updateSettings({ theme })} />
+      </div>
       <section className="card">
         <h3 className="card-title">Today so far</h3>
         <div className="tally">
@@ -188,9 +191,15 @@ export function Shell({ children }: { children: ReactNode }) {
       </nav>
 
       <main className="main">
+        <div className="topbar">
+          <Link href={app.demo ? '/' : app.base} className="topbar-logo" aria-label="Fifteen">
+            <Logo size={24} />
+          </Link>
+          <ThemeToggle onChange={(theme) => void app.updateSettings({ theme })} />
+        </div>
         {app.demo && (
           <div className="demo-banner">
-            <span>You’re in the demo. Changes vanish when you leave.</span>
+            <span>This is the demo. Nothing is saved.</span>
             <Link href="/signup" className="link">
               Make it yours
             </Link>

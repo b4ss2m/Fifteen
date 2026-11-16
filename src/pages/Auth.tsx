@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Logo } from '../components/ui';
+import { Logo, ThemeToggle } from '../components/ui';
 import { api, deriveKey, messageFor, type Bot } from '../lib/api';
 import { browserTz } from '../lib/dates';
 import { Link, navigate } from '../lib/router';
+import { getTheme } from '../lib/theme';
 
 type Mode = 'login' | 'signup' | 'recover';
 
@@ -37,7 +38,7 @@ function useTurnstile() {
         sitekey: siteKey,
         callback: setToken,
         'expired-callback': () => setToken(''),
-        theme: 'light',
+        theme: getTheme(),
       });
     };
     if (window.turnstile) return mount();
@@ -62,7 +63,7 @@ function useTurnstile() {
 const COPY: Record<Mode, { title: string; sub: string; action: string }> = {
   login: { title: 'Welcome back.', sub: 'Pick up where your day left off.', action: 'Log in' },
   signup: { title: 'Start your audit.', sub: 'An email and a password. That’s the whole form.', action: 'Create account' },
-  recover: { title: 'Get back in.', sub: 'Use the recovery code you saved when you signed up, and choose a new password.', action: 'Reset password' },
+  recover: { title: 'Get back in.', sub: 'Enter the recovery code you saved when you signed up, then choose a new password.', action: 'Reset password' },
 };
 
 export function Auth({ mode, onDone }: { mode: Mode; onDone(): void }) {
@@ -113,7 +114,7 @@ export function Auth({ mode, onDone }: { mode: Mode; onDone(): void }) {
           <Logo />
           <h1>Save your recovery code.</h1>
           <p className="muted">
-            Fifteen doesn’t send email, so there is no “forgot password” link. If you ever lose your password, this code is the only way back in. It
+            This code is your way back in if you ever forget your password. Keep it somewhere safe, like your password manager. It
             won’t be shown again.
           </p>
           <p className="code num">{recovery}</p>
@@ -141,6 +142,9 @@ export function Auth({ mode, onDone }: { mode: Mode; onDone(): void }) {
   return (
     <div className="auth">
       <div className="auth-wash" aria-hidden="true" />
+      <div className="auth-theme">
+        <ThemeToggle />
+      </div>
       <form className="auth-card" onSubmit={submit}>
         <Link href="/" aria-label="Fifteen home">
           <Logo />

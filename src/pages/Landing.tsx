@@ -4,7 +4,7 @@ import { CONTACT_EMAIL } from '../../shared/site';
 import { LogPanel } from '../components/LogSheet';
 import { ReportCard } from '../components/ReportCard';
 import { Timeline } from '../components/Timeline';
-import { Icon, Logo } from '../components/ui';
+import { Icon, Logo, ThemeToggle } from '../components/ui';
 import { DEMO_CATEGORIES, REPORT_ENTRIES, SHOWCASE_ENTRIES, SHOWCASE_NOW, SHOWCASE_SPANS } from '../lib/demo';
 import { Link } from '../lib/router';
 
@@ -36,6 +36,15 @@ function Phone({ children, label }: { children: ReactNode; label: string }) {
 const showcase = buildBlocks(SHOWCASE_ENTRIES, SHOWCASE_SPANS, SHOWCASE_NOW);
 const showcaseSum = summarize(showcase, DEMO_CATEGORIES, 16);
 const reportSum = summarize(buildBlocks(REPORT_ENTRIES, SHOWCASE_SPANS, 1440), DEMO_CATEGORIES, 16);
+const TUNE_CATEGORIES = [
+  ['Deep Work', 'blue', 'Productive'],
+  ['Client calls', 'teal', 'Productive'],
+  ['Writing', 'violet', 'Productive'],
+  ['Gym', 'green', 'Productive'],
+  ['Family', 'stone', 'Neutral'],
+  ['Scrolling', 'red', 'Wasted'],
+] as const;
+
 const week = [64, 81, 58, 77, null, null, 72].map((score, i) => ({ day: `2026-11-${String(4 + i).padStart(2, '0')}`, score }));
 
 function TimelineScreen() {
@@ -116,6 +125,7 @@ export function Landing({ signedIn }: { signedIn: boolean }) {
           <a href="#privacy">Privacy</a>
         </nav>
         <div className="land-nav-cta">
+          <ThemeToggle />
           {!signedIn && (
             <Link href="/login" className="land-login">
               Log in
@@ -257,6 +267,56 @@ export function Landing({ signedIn }: { signedIn: boolean }) {
         </div>
       </section>
 
+      <section className="feature feature-flip" id="yours">
+        <div className="feature-copy">
+          <p className="eyebrow">Yours to shape</p>
+          <h2>Your categories. Your rhythm.</h2>
+          <p>
+            Fifteen starts you off with a handful of categories, but the list is yours. Rename them, recolour them, add your own, and decide
+            which ones count as productive, neutral or wasted.
+          </p>
+          <p>
+            Check in every 10, 15, 20, 30 or 60 minutes. Track only when you press start, or automatically during your workday. And if your
+            day runs past midnight, tell Fifteen when it really ends.
+          </p>
+        </div>
+        <div className="feature-art">
+          <div className="tune" aria-label="Example settings: a 15 minute interval and six custom categories">
+            <div className="tune-row">
+              <span className="tune-label">Ask me every</span>
+              <div className="tune-seg num">
+                {[10, 15, 20, 30, 60].map((m) => (
+                  <span key={m} className={m === 15 ? 'on' : ''}>
+                    {m}
+                  </span>
+                ))}
+                <small>min</small>
+              </div>
+            </div>
+            <ul className="tune-cats">
+              {TUNE_CATEGORIES.map(([name, color, kind]) => (
+                <li key={name}>
+                  <span className="swatch" style={{ ['--c' as string]: `var(--c-${color})` }} />
+                  <span className="tune-name">{name}</span>
+                  <span className={`tune-kind tune-${kind.toLowerCase()}`}>{kind}</span>
+                </li>
+              ))}
+              <li className="tune-new">
+                <Icon name="plus" size={16} /> New category
+              </li>
+            </ul>
+            <div className="tune-row tune-foot">
+              <span>
+                Workday <strong className="num">09:00–18:00</strong>
+              </span>
+              <span>
+                Day ends at <strong className="num">02:00</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="privacy-band" id="privacy">
         <div>
           <p className="eyebrow">Privacy</p>
@@ -320,7 +380,9 @@ export function Landing({ signedIn }: { signedIn: boolean }) {
           <Link href="/terms">Terms</Link>
           <Link href="/login">Log in</Link>
         </nav>
-        <span className="faint">Contact: {CONTACT_EMAIL}</span>
+        <a className="land-contact" href={`mailto:${CONTACT_EMAIL}`}>
+          {CONTACT_EMAIL}
+        </a>
       </footer>
     </div>
   );

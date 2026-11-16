@@ -118,7 +118,7 @@ export function Today() {
             <strong>
               {gaps.length === 1 ? 'One gap' : `${gaps.length} gaps`} in {isToday ? 'today’s' : 'this day’s'} thread.
             </strong>{' '}
-            {fmtDur(sum.gapMin)} unaccounted for.
+            <span className="num">{fmtDur(sum.gapMin)}</span> unaccounted for.
           </span>
           <span className="gap-go">Close {gaps.length === 1 ? 'it' : 'them'}</span>
         </button>

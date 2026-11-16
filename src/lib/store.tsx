@@ -5,6 +5,7 @@ import type { Category, DaysResponse, Entry, Me, Settings, TrackWindow } from '.
 import { api, messageFor, type EntryInput } from './api';
 import { browserTz, epochAt, minuteOfDay, nowMinFor, setRollover, today } from './dates';
 import { announcePulse } from './pulse';
+import { applyTheme } from './theme';
 
 /** Everything the app needs from a data source. The real API and the in-browser demo both fit this. */
 export interface Backend {
@@ -182,9 +183,8 @@ export function AppProvider({ backend, initial, demo = false, onSignedOut, child
   }, []);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = me.settings.theme;
-    if (!demo) localStorage.setItem('fifteen.theme', me.settings.theme);
-  }, [me.settings.theme, demo]);
+    applyTheme(me.settings.theme);
+  }, [me.settings.theme]);
 
   const t = today();
   const nowMin = minuteOfDay(now);

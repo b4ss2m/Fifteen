@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Logo } from '../components/ui';
+import { Logo, ThemeToggle } from '../components/ui';
 import { Link } from '../lib/router';
 import { LAST_UPDATED as PRIVACY_UPDATED, PrivacyContent } from './legal/PrivacyContent';
 import { LAST_UPDATED as TERMS_UPDATED, TermsContent } from './legal/TermsContent';
@@ -14,6 +14,7 @@ function LegalPage({ title, updated, children }: { title: string; updated: strin
         <nav>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
+          <ThemeToggle />
         </nav>
       </header>
       <main className="prose">

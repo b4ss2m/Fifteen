@@ -503,7 +503,9 @@ export function Settings() {
         <Link href="/terms" className="link">
           Terms
         </Link>
-        <span>Contact: {CONTACT_EMAIL}</span>
+        <a className="link" href={`mailto:${CONTACT_EMAIL}`}>
+          {CONTACT_EMAIL}
+        </a>
       </p>
     </div>
   );
