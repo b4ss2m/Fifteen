@@ -1,5 +1,18 @@
 @import '@fontsource-variable/dm-sans/index.css';
 
+/*
+ * DM Sans has no fixed-width figures: its "1" is half as wide as its "0", so times and
+ * percentages never line up. Digits alone are taken from Figtree, which does have them.
+ */
+@font-face {
+  font-family: 'Fifteen Digits';
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url('../../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0030-0039;
+}
+
 :root {
   --paper: #f6f4ee;
   --surface: #fffdf9;
@@ -31,7 +44,7 @@
   --c-stone: #a69f92;
   --c-slate: #6c778a;
 
-  --sans: 'DM Sans Variable', 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sans: 'Fifteen Digits', 'DM Sans Variable', 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --radius: 14px;
   --tabbar: 62px;
   color-scheme: light;
@@ -127,8 +140,10 @@ button {
   border-radius: 6px;
 }
 
-/* Times and durations: same typeface, figures that line up in columns. */
-.num {
+/* Times, durations and anything else that sits in a column: figures of equal width. */
+.num,
+select,
+time {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
 }

@@ -19,8 +19,9 @@ export function TermsContent() {
         <li>Keep your password and your recovery code safe.</li>
       </ul>
       <p>
-        <strong>There is no email reset.</strong> If you lose both your password and your recovery code, your account
-        cannot be recovered. We have no way to do it for you.
+        <strong>Your recovery code is your way back in.</strong> You get it when you sign up, and it resets a forgotten
+        password. Passwords are never stored in a form we can read, so if you lose both your password and your
+        recovery code, the account cannot be recovered.
       </p>
 
       <h2>Your data</h2>

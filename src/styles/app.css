@@ -180,6 +180,7 @@
   margin: 2px 0 0;
   font-size: 15px;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .warn,
@@ -313,15 +314,6 @@
 
 .track-on .track-led {
   background: var(--c-green);
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--c-green) 60%, transparent);
-  animation: led 2.4s ease-out infinite;
-}
-
-@keyframes led {
-  70%,
-  100% {
-    box-shadow: 0 0 0 7px transparent;
-  }
 }
 
 /* ── Page chrome ─────────────────────────────────────────── */
@@ -433,6 +425,11 @@
 
 .gap-call > :nth-child(2) {
   flex: 1;
+  min-width: 0;
+}
+
+.gap-call strong {
+  display: block;
 }
 
 .gap-dots {
@@ -577,13 +574,17 @@ button.blk-body:not([disabled]):hover {
 }
 
 .blk-name {
+  flex: 0 1 auto;
   font-weight: 600;
   font-size: 14.5px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* The tag gives way first when a row runs out of room, so the category name stays whole. */
 .blk-tag {
+  flex: 1 1 0;
+  min-width: 0;
   font-size: 13px;
   color: var(--ink-2);
   overflow: hidden;
@@ -1635,14 +1636,52 @@ button.blk-body:not([disabled]):hover {
     background: none;
   }
 
+  /* A round button on phones, so it covers as little of the thread as possible. */
   .rail-log {
     position: fixed;
     right: 16px;
     bottom: calc(var(--tabbar) + 16px + env(safe-area-inset-bottom));
-    height: 54px;
+    width: 56px;
+    height: 56px;
     margin: 0;
-    padding: 0 20px 0 16px;
+    padding: 0;
     box-shadow: var(--shadow-lg);
+  }
+
+  .rail-log span {
+    display: none;
+  }
+
+  .rail-log svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .demo-banner {
+    margin-bottom: 16px;
+    padding: 9px 14px;
+    font-size: 13.5px;
+  }
+
+  .page-head {
+    margin-bottom: 16px;
+  }
+
+  .track-bar {
+    margin-bottom: 12px;
+    padding: 10px 10px 10px 14px;
+    border-radius: 16px;
+  }
+
+  .strip {
+    margin-bottom: 12px;
+    padding: 11px 14px;
+  }
+
+  .gap-call {
+    margin-bottom: 16px;
+    padding: 10px 12px;
+    font-size: 13.5px;
   }
 
   .rail-log-away {
@@ -1685,5 +1724,65 @@ button.blk-body:not([disabled]):hover {
 
   .prose h1 {
     font-size: 34px;
+  }
+}
+
+/* ── Top bar and theme switch ────────────────────────────── */
+
+.topbar {
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  margin: -14px -6px 10px 0;
+}
+
+.topbar-logo {
+  display: none;
+  margin-right: auto;
+  text-decoration: none;
+}
+
+.aside-top {
+  display: flex;
+  justify-content: flex-end;
+  margin: -14px -6px -8px 0;
+}
+
+.auth-theme {
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top));
+  right: 16px;
+}
+
+@media (max-width: 1139px) {
+  .topbar {
+    display: flex;
+  }
+}
+
+@media (max-width: 759px) {
+  .topbar {
+    margin: -8px -8px 14px 0;
+  }
+
+  .topbar-logo {
+    display: block;
+  }
+}
+
+/* iPhones zoom the page when a focused field's text is under 16px. Touch targets get a little more room too. */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea,
+  .select-sm,
+  .cat-input,
+  .log-times select {
+    font-size: 16px;
+  }
+
+  .icon-sm {
+    width: 38px;
+    height: 38px;
   }
 }

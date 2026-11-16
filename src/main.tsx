@@ -6,6 +6,7 @@ import { api } from './lib/api';
 import { demoBackend, seedDemo } from './lib/demo';
 import { registerWorker } from './lib/pulse';
 import { navigate, usePath } from './lib/router';
+import { applyTheme, getTheme } from './lib/theme';
 import { apiBackend, AppProvider, useApp } from './lib/store';
 import { Auth } from './pages/Auth';
 import { Landing } from './pages/Landing';
@@ -72,10 +73,6 @@ function Root() {
     if (isAuth && signedIn) navigate('/app', { replace: true });
   }, [session.state, isApp, isAuth, signedIn]);
 
-  useEffect(() => {
-    if (!isApp && !path.startsWith('/demo')) document.documentElement.dataset.theme = 'light';
-  }, [isApp, path]);
-
   if (path === '/privacy') return <Privacy />;
   if (path === '/terms') return <Terms />;
   if (path === '/demo' || path.startsWith('/demo/')) return <Demo />;
@@ -103,7 +100,7 @@ function Root() {
   return <Landing signedIn={signedIn} />;
 }
 
-document.documentElement.dataset.theme = localStorage.getItem('fifteen.theme') === 'dark' ? 'dark' : 'light';
+applyTheme(getTheme());
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

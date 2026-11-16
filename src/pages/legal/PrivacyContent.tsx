@@ -19,7 +19,7 @@ export function PrivacyContent() {
         You can reach us at {CONTACT_EMAIL}.
       </p>
       <p>
-        Fifteen is a small non-commercial project. We have not appointed a data protection officer.
+        Fifteen is a small project. We are not required to appoint a data protection officer and have not done so.
       </p>
 
       <h2>What Fifteen does</h2>
@@ -42,7 +42,7 @@ export function PrivacyContent() {
         <tbody>
           <tr>
             <td>Email address</td>
-            <td>Your login identifier. We send no marketing email. Currently the app sends no email at all.</td>
+            <td>Your login. It is used to sign you in and for nothing else: no newsletters, no marketing.</td>
             <td>Running your account</td>
           </tr>
           <tr>
@@ -61,7 +61,8 @@ export function PrivacyContent() {
           <tr>
             <td>Settings</td>
             <td>
-              Check-in interval, workday days and hours, report time, the time your day ends, waking hours, time zone, theme, sound on or off.
+              Check-in interval, workday days and hours, report time, the time your day ends, waking hours, time
+              zone, theme, sound on or off.
             </td>
             <td>Running the service the way you set it up</td>
           </tr>
@@ -90,6 +91,14 @@ export function PrivacyContent() {
             <td>A hash of your session token, its creation time and its expiry time.</td>
             <td>Keeping you logged in, security</td>
           </tr>
+          <tr>
+            <td>Sign-in protection</td>
+            <td>
+              A count of recent failed log-in attempts and, if the account is temporarily locked, the time the lock
+              ends.
+            </td>
+            <td>Stopping password guessing</td>
+          </tr>
         </tbody>
       </table>
       <p>
@@ -97,8 +106,8 @@ export function PrivacyContent() {
         there, such as health details, other people&rsquo;s names or anything confidential.
       </p>
       <p>
-        <strong>The recovery code matters.</strong> It is the only way to reset a forgotten password, because Fifteen
-        has no email-based reset. We cannot recover your account for you.
+        <strong>The recovery code matters.</strong> It is what resets a forgotten password. Because we never hold your
+        password in a form we can read, we cannot restore access to an account without it.
       </p>
 
       <h2>What we do not collect</h2>
@@ -106,12 +115,14 @@ export function PrivacyContent() {
         <li>No analytics and no advertising.</li>
         <li>No tracking and no third-party cookies.</li>
         <li>No third-party fonts or scripts. Fonts are hosted by Fifteen itself.</li>
-        <li>No location, no contacts and no device fingerprinting.</li>
+        <li>No location and no contacts.</li>
+        <li>No fingerprinting of your device by Fifteen. The bot check described below is the one exception.</li>
         <li>No selling or sharing of your data.</li>
       </ul>
       <p>
         IP addresses are not stored in Fifteen&rsquo;s database. They are processed briefly for rate limiting and abuse
-        prevention, and by our hosting provider as part of normal operation.
+        prevention, and by our hosting provider as part of normal operation. Our own error logs contain no personal
+        data.
       </p>
 
       <h2>Cookies and local storage</h2>
@@ -121,15 +132,17 @@ export function PrivacyContent() {
         you use the app. Because it is strictly necessary, we do not show a consent banner.
       </p>
       <p>
-        Your browser&rsquo;s local storage is used only for on-device preferences, such as your theme, and for the
-        demo mode. Demo data never leaves your browser.
+        Your browser&rsquo;s local storage is used only for on-device preferences, such as your theme and whether
+        notifications are switched on in this browser. The demo runs entirely in your browser, and nothing you do in it
+        is sent to us.
       </p>
 
       <h2>Suggestions (auto-fill)</h2>
       <p>
-        Fifteen suggests a likely category based on your own past entries. This is computed on your device from your own
-        history. It involves no profiling with legal or similarly significant effects, and no automated decision-making
-        in the sense of Article 22 GDPR. No AI model is trained on user data.
+        Fifteen suggests a likely category based on your own past entries. In the app this is computed on your device
+        from your own history. The shortcut buttons on a notification are picked on our server from the same log. None
+        of this involves profiling with legal or similarly significant effects, or automated decision-making in the
+        sense of Article 22 GDPR. No AI model is trained on user data.
       </p>
 
       <h2>Who processes your data</h2>
@@ -143,8 +156,10 @@ export function PrivacyContent() {
       </p>
       <h3>Cloudflare Turnstile</h3>
       <p>
-        If bot protection is enabled, Cloudflare Turnstile runs on the sign-up, log-in and recovery forms. It helps tell
-        people from bots.
+        To keep automated sign-ups and password guessing out, Cloudflare Turnstile may run on the sign-up, log-in
+        and recovery forms. To tell people from bots it looks at technical signals from your browser and device, such
+        as your IP address and browser characteristics. Cloudflare states that it uses this information only to detect
+        bots and not for advertising. Turnstile does not run anywhere else in Fifteen.
       </p>
       <h3>Browser push services</h3>
       <p>
@@ -186,7 +201,8 @@ export function PrivacyContent() {
       <p>Two of these you can do yourself:</p>
       <ul>
         <li>
-          <strong>Export my data</strong> (Settings, then Account) downloads everything as a JSON file.
+          <strong>Export my data</strong> (Settings, then Account) downloads your account details, settings, categories
+          and log as a JSON file.
         </li>
         <li>
           <strong>Delete account</strong> (Settings, then Account) erases everything, as described above.

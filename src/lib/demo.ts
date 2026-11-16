@@ -2,6 +2,7 @@ import { dayAdd, weekdayOf } from '../../shared/time';
 import { DEFAULT_SETTINGS, type Category, type Entry, type Me, type TrackWindow } from '../../shared/types';
 import { browserTz, minuteOfDay, today } from './dates';
 import type { Backend } from './store';
+import { getTheme } from './theme';
 
 /** Made-up data for the demo and the screenshots on the home page. Nothing here touches the server. */
 
@@ -57,6 +58,7 @@ export function seedDemo(): { me: Me; entries: Entry[]; windows: TrackWindow[] }
     settings: {
       ...DEFAULT_SETTINGS,
       tz: browserTz(),
+      theme: getTheme(),
       autoTrack: true,
       autoSince: dayAdd(t, -30),
       workdays: [...new Set([1, 2, 3, 4, 5, weekdayOf(t)])].sort(),

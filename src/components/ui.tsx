@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { applyTheme, useTheme, type Theme } from '../lib/theme';
 
 const PATHS = {
   thread: 'M12 3v4M12 11v2M12 17v4M8.5 7h7M9.5 15h5',
@@ -19,6 +20,8 @@ const PATHS = {
   download: 'M12 4v11M7.5 11l4.5 4.5 4.5-4.5M5 20h14',
   logout: 'M14 5H6v14h8M10.5 12H20M16.5 8.5 20 12l-3.5 3.5',
   trash: 'M5 7h14M9.5 7V4.5h5V7M7 7l.8 12.5h8.4L17 7',
+  sun: 'M12 16.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4',
+  moon: 'M20 14.2A8 8 0 0 1 9.8 4 8 8 0 1 0 20 14.2Z',
 } as const;
 
 export type IconName = keyof typeof PATHS;
@@ -61,6 +64,26 @@ export function Switch({ checked, onChange, label }: { checked: boolean; onChang
   return <button type="button" role="switch" aria-checked={checked} aria-label={label} className="switch" onClick={() => onChange(!checked)} />;
 }
 
+/** The light/dark switch. Pass `onChange` where the choice should also be saved to an account. */
+export function ThemeToggle({ onChange }: { onChange?(theme: Theme): void }) {
+  const theme = useTheme();
+  const next: Theme = theme === 'dark' ? 'light' : 'dark';
+  return (
+    <button
+      type="button"
+      className="icon-btn theme-toggle"
+      aria-label={`Switch to ${next} theme`}
+      title={`Switch to ${next} theme`}
+      onClick={() => {
+        applyTheme(next);
+        onChange?.(next);
+      }}
+    >
+      <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
+    </button>
+  );
+}
+
 interface SheetProps {
   open: boolean;
   onClose(): void;
@@ -71,25 +94,42 @@ interface SheetProps {
 /** A bottom sheet on phones, a centred dialog on wider screens. */
 export function Sheet({ open, onClose, label, children }: SheetProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const wrap = useRef<HTMLDivElement>(null);
+  const close = useRef(onClose);
+  close.current = onClose;
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') close.current();
     };
     document.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     ref.current?.focus();
+
+    // On phones the keyboard covers the bottom of the screen without resizing the page.
+    // Fitting the backdrop to the visible area keeps the sheet sitting on top of the keyboard.
+    const vv = window.visualViewport;
+    const fit = () => {
+      if (!vv || !wrap.current) return;
+      wrap.current.style.height = `${vv.height}px`;
+      wrap.current.style.top = `${vv.offsetTop}px`;
+    };
+    fit();
+    vv?.addEventListener('resize', fit);
+    vv?.addEventListener('scroll', fit);
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prev;
+      vv?.removeEventListener('resize', fit);
+      vv?.removeEventListener('scroll', fit);
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
   return (
-    <div className="sheet-wrap" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="sheet-wrap" ref={wrap} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className="sheet" role="dialog" aria-modal="true" aria-label={label} tabIndex={-1} ref={ref}>
         <span className="sheet-grip" aria-hidden="true" />
         {children}
