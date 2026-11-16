@@ -127,7 +127,7 @@
   inset: 0;
   z-index: 0;
   color: var(--ink);
-  transform: translate(74px, 18px) rotate(7deg) scale(0.93);
+  transform: translate(-74px, 18px) rotate(-7deg) scale(0.93);
   transform-origin: 50% 80%;
   opacity: 0.92;
   filter: saturate(0.9);
@@ -917,6 +917,6 @@
 
 @media (max-width: 899px) {
   .phone-back {
-    transform: translate(34px, 14px) rotate(6deg) scale(0.93);
+    transform: translate(-34px, 14px) rotate(-6deg) scale(0.93);
   }
 }
