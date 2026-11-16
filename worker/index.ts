@@ -1,4 +1,5 @@
 import { Hono, type Context } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
@@ -205,7 +206,6 @@ app.use('*', async (c, next) => {
   if (c.req.method !== 'GET' && c.req.method !== 'HEAD') {
     // Cookies are SameSite=Lax; this closes what is left of cross-site request forgery.
     if (c.req.header('origin') !== new URL(c.req.url).origin) fail(403, 'bad_origin');
-    if (Number(c.req.header('content-length') ?? 0) > MAX_BODY) fail(413, 'too_large');
   }
   if (c.env.API_LIMITER && !(await c.env.API_LIMITER.limit({ key: clientIp(c) })).success) fail(429, 'slow_down');
   await next();
@@ -214,6 +214,9 @@ app.use('*', async (c, next) => {
   c.header('Referrer-Policy', 'no-referrer');
   c.header('Cross-Origin-Resource-Policy', 'same-origin');
 });
+
+// Stops reading as soon as a body runs over the limit, whether or not it declared its length.
+app.use('*', bodyLimit({ maxSize: MAX_BODY, onError: (c) => c.json({ error: 'too_large' }, 413) }));
 
 app.get('/config', (c) =>
   c.json<PublicConfig>({
