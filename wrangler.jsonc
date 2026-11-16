@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fifteen",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "fifteen",
+      "database_id": "3d1cb79f-7cf5-4ab1-aef6-8c537164f8d3",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    { "name": "AUTH_LIMITER", "namespace_id": "1501", "simple": { "limit": 8, "period": 60 } },
+    { "name": "API_LIMITER", "namespace_id": "1502", "simple": { "limit": 240, "period": 60 } }
+  ],
+  // One tick a minute sends due pulse notifications. It does nothing until push keys are set.
+  "triggers": { "crons": ["* * * * *"] },
+  "vars": {
+    // Public values only. Secrets (TURNSTILE_SECRET, VAPID_PRIVATE_KEY) are set in the
+    // Cloudflare dashboard or with `wrangler secret put`, never in this file.
+    "TURNSTILE_SITE_KEY": "",
+    "VAPID_PUBLIC_KEY": ""
+  },
+  "observability": { "enabled": true }
+}
