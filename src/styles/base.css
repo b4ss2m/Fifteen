@@ -13,7 +13,9 @@
   unicode-range: U+0030-0039;
 }
 
-:root {
+:root,
+[data-theme='light'] {
+  color-scheme: light;
   --paper: #f6f4ee;
   --surface: #fffdf9;
   --raised: #ffffff;
@@ -44,13 +46,16 @@
   --c-stone: #a69f92;
   --c-slate: #6c778a;
 
+}
+
+:root {
   --sans: 'Fifteen Digits', 'DM Sans Variable', 'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --radius: 14px;
   --tabbar: 62px;
-  color-scheme: light;
 }
 
-:root[data-theme='dark'] {
+/* Works on the page root and on any element, so one part of a page can show the other theme. */
+[data-theme='dark'] {
   --paper: #1b1a18;
   --surface: #23221f;
   --raised: #2b2926;

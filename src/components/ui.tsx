@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { applyTheme, useTheme, type Theme } from '../lib/theme';
 
 const PATHS = {
@@ -22,6 +23,7 @@ const PATHS = {
   trash: 'M5 7h14M9.5 7V4.5h5V7M7 7l.8 12.5h8.4L17 7',
   sun: 'M12 16.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4',
   moon: 'M20 14.2A8 8 0 0 1 9.8 4 8 8 0 1 0 20 14.2Z',
+  minus: 'M5 12h14',
 } as const;
 
 export type IconName = keyof typeof PATHS;
@@ -128,12 +130,14 @@ export function Sheet({ open, onClose, label, children }: SheetProps) {
   }, [open]);
 
   if (!open) return null;
-  return (
+  // Rendered at the end of <body>, so it always sits above the page whatever opened it.
+  return createPortal(
     <div className="sheet-wrap" ref={wrap} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className="sheet" role="dialog" aria-modal="true" aria-label={label} tabIndex={-1} ref={ref}>
         <span className="sheet-grip" aria-hidden="true" />
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

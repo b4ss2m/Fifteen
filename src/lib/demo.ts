@@ -148,7 +148,7 @@ export const SHOWCASE_ENTRIES: Entry[] = [
   { day: SHOWCASE_DAY, start: 690, dur: 60, cat: 1, tag: 'Q3 report' },
   { day: SHOWCASE_DAY, start: 750, dur: 45, cat: 3, tag: 'Gym' },
   { day: SHOWCASE_DAY, start: 795, dur: 30, cat: 5, tag: 'Lunch' },
-  { day: SHOWCASE_DAY, start: 825, dur: 75, cat: 1, tag: 'API redesign' },
+  { day: SHOWCASE_DAY, start: 825, dur: 75, cat: 1, tag: 'New API' },
 ];
 export const SHOWCASE_SPANS = [{ start: 540, end: 1080 }];
 
@@ -160,7 +160,7 @@ export const REPORT_ENTRIES: Entry[] = [
   { day: SHOWCASE_DAY, start: 705, dur: 60, cat: 1, tag: 'Q3 report' },
   { day: SHOWCASE_DAY, start: 765, dur: 45, cat: 3, tag: 'Gym' },
   { day: SHOWCASE_DAY, start: 810, dur: 60, cat: 5, tag: 'Lunch' },
-  { day: SHOWCASE_DAY, start: 870, dur: 60, cat: 1, tag: 'API redesign' },
+  { day: SHOWCASE_DAY, start: 870, dur: 60, cat: 1, tag: 'New API' },
   { day: SHOWCASE_DAY, start: 975, dur: 60, cat: 4, tag: 'YouTube' },
   { day: SHOWCASE_DAY, start: 1035, dur: 45, cat: 2, tag: 'Invoices' },
 ];
