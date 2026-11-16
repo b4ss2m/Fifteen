@@ -102,7 +102,12 @@ export function AppProvider({ backend, initial, demo = false, onSignedOut, child
   const [sheet, setSheet] = useState<LogRequest | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const loadedFrom = useRef<string | null>(null);
-  const lastPulse = useRef<string>(sessionStorage.getItem('fifteen.pulse') ?? '');
+  // The demo never greets a visitor with a check-in; the first one comes at the next boundary.
+  const lastPulse = useRef<string>(
+    demo
+      ? `${today()}:${Math.floor(minuteOfDay() / initial.settings.interval) * initial.settings.interval}`
+      : (sessionStorage.getItem('fifteen.pulse') ?? ''),
+  );
   const toastTimer = useRef<number>(0);
 
   const say = useCallback((message: string) => {

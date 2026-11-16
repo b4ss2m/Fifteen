@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { fmtDur, fmtMin } from '../../shared/time';
 import { minuteOfDay, today } from '../lib/dates';
 import { Link, usePath } from '../lib/router';
@@ -160,6 +160,22 @@ export function Shell({ children }: { children: ReactNode }) {
   const path = usePath();
   const sub = path.slice(app.base.length).replace(/\/$/, '');
 
+  // In the demo, a nudge towards the log button a few seconds in. Shown once.
+  const [tip, setTip] = useState(false);
+  useEffect(() => {
+    if (!app.demo || sessionStorage.getItem('fifteen.tip')) return;
+    const show = window.setTimeout(() => setTip(true), 3500);
+    const hide = window.setTimeout(() => setTip(false), 20_000);
+    return () => {
+      window.clearTimeout(show);
+      window.clearTimeout(hide);
+    };
+  }, [app.demo]);
+  const dismissTip = () => {
+    setTip(false);
+    sessionStorage.setItem('fifteen.tip', '1');
+  };
+
   return (
     <div className="shell">
       <nav className="rail" aria-label="Main">
@@ -177,12 +193,18 @@ export function Shell({ children }: { children: ReactNode }) {
         <button
           className={`btn btn-primary rail-log${sub === '' ? '' : ' rail-log-away'}`}
           onClick={() => {
+            dismissTip();
             const i = app.me.settings.interval;
             const end = Math.max(app.me.settings.rollover + i, Math.floor(minuteOfDay() / i) * i);
             app.openLog({ day: today(), start: end - i, end, mode: 'new' });
           }}
         >
           <Icon name="plus" size={18} /> <span>Log time</span>
+          {tip && sub === '' && !app.sheet && (
+            <em className="tip" role="status">
+              Try it: log what you just did
+            </em>
+          )}
         </button>
         <div className="rail-foot">
           <TrackingControl variant="rail" />
