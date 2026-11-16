@@ -50,7 +50,7 @@ export function seedDemo(): { me: Me; entries: Entry[]; windows: TrackWindow[] }
   }
   // Today runs up to about half an hour ago, so the demo opens with a gap waiting to be closed.
   const now = minuteOfDay();
-  entries.push(...layDay(t, SHAPES[0], Math.max(9 * 60, now - 35)));
+  entries.push(...layDay(t, SHAPES[0], Math.min(18 * 60, Math.max(9 * 60, now - 35))));
 
   const me: Me = {
     email: 'you@example.com',
@@ -63,7 +63,7 @@ export function seedDemo(): { me: Me; entries: Entry[]; windows: TrackWindow[] }
       autoSince: dayAdd(t, -30),
       workdays: [...new Set([1, 2, 3, 4, 5, weekdayOf(t)])].sort(),
       dayStart: 9 * 60,
-      dayEnd: Math.max(18 * 60, Math.min(1440, Math.ceil((now + 90) / 60) * 60)),
+      dayEnd: 18 * 60,
     },
     categories: DEMO_CATEGORIES,
     trackUntil: null,

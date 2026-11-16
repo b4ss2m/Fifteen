@@ -41,7 +41,7 @@ const TUNE_CATEGORIES = [
   ['Client calls', 'teal', 'Productive'],
   ['Writing', 'violet', 'Productive'],
   ['Gym', 'green', 'Productive'],
-  ['Family', 'stone', 'Neutral'],
+  ['Errands', 'stone', 'Neutral'],
   ['Scrolling', 'red', 'Wasted'],
 ] as const;
 

@@ -76,6 +76,7 @@
 }
 
 .rail-log {
+  position: relative;
   align-self: flex-start;
   margin-left: 4px;
   padding: 0 22px 0 18px;
@@ -385,68 +386,11 @@
   border: 1px solid var(--line);
 }
 
-.gap-call {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  margin-bottom: 22px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  text-align: left;
-  font-size: 14px;
-  background: color-mix(in srgb, var(--coral) 8%, var(--surface));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--coral) 25%, transparent);
-  transition: background 0.15s;
-}
-
-.report-call {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-  padding: 13px 16px;
-  border-radius: 16px;
-  background: linear-gradient(100deg, var(--wash-b), var(--wash-a));
-  font-size: 14px;
-  text-decoration: none;
-}
-
-.report-call .link {
-  flex: none;
-  font-weight: 600;
-  text-decoration-color: color-mix(in srgb, var(--ink) 30%, transparent);
-}
-
-.gap-call:hover {
-  background: color-mix(in srgb, var(--coral) 13%, var(--surface));
-}
-
-.gap-call > :nth-child(2) {
-  flex: 1;
-  min-width: 0;
-}
-
-.gap-call strong {
-  display: block;
-}
-
 .gap-dots {
   width: 6px;
   height: 30px;
   flex: none;
   background: radial-gradient(circle, var(--coral) 2.2px, transparent 2.7px) center top / 6px 10px repeat-y;
-}
-
-.gap-go {
-  flex: none;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: var(--coral);
-  color: #fff;
-  font-weight: 600;
-  font-size: 13px;
 }
 
 .empty {
@@ -1678,12 +1622,6 @@ button.blk-body:not([disabled]):hover {
     padding: 11px 14px;
   }
 
-  .gap-call {
-    margin-bottom: 16px;
-    padding: 10px 12px;
-    font-size: 13.5px;
-  }
-
   .rail-log-away {
     display: none;
   }
@@ -1784,5 +1722,102 @@ button.blk-body:not([disabled]):hover {
   .icon-sm {
     width: 38px;
     height: 38px;
+  }
+}
+
+/* ── Quiet notes above the thread ────────────────────────── */
+
+.notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: -4px 2px 14px;
+  font-size: 13.5px;
+}
+
+.note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-2);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.note:hover {
+  color: var(--ink);
+}
+
+.note-gap {
+  color: color-mix(in srgb, var(--coral) 85%, var(--ink));
+}
+
+.note .gap-dots {
+  width: 14px;
+  height: 6px;
+  background: radial-gradient(circle, var(--coral) 2px, transparent 2.5px) left center / 7px 6px repeat-x;
+}
+
+/* ── Demo tip ────────────────────────────────────────────── */
+
+.tip {
+  position: absolute;
+  left: 4px;
+  top: calc(100% + 13px);
+  padding: 9px 14px;
+  border-radius: 12px;
+  background: var(--coral);
+  color: #fff;
+  font-style: normal;
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  animation: tip-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.3), tip-bob 2.2s ease-in-out 0.4s infinite;
+}
+
+.tip::before {
+  content: '';
+  position: absolute;
+  left: 22px;
+  top: -5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--coral);
+  transform: rotate(45deg);
+}
+
+@keyframes tip-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes tip-bob {
+  50% {
+    translate: 0 5px;
+  }
+}
+
+@media (max-width: 759px) {
+  .tip {
+    left: auto;
+    right: calc(100% + 14px);
+    top: 50%;
+    margin-top: -19px;
+  }
+
+  .tip::before {
+    left: auto;
+    right: -5px;
+    top: 50%;
+    margin-top: -6px;
+  }
+
+  @keyframes tip-bob {
+    50% {
+      translate: -5px 0;
+    }
   }
 }

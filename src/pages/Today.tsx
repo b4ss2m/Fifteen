@@ -35,6 +35,7 @@ export function Today() {
   const sum = app.summaryFor(day);
   const hasRecord = blocks.some((b) => b.type !== 'idle');
   const gaps = blocks.filter((b) => b.type === 'gap');
+  const reportReady = isToday && hasRecord && minuteOfDay(app.now) >= app.me.settings.reportAt;
   const go = (d: string) => navigate(d === t ? app.base : `${app.base}?day=${d}`);
 
   const pick = (b: Block) => {
@@ -102,26 +103,21 @@ export function Today() {
         </dl>
       )}
 
-      {isToday && hasRecord && minuteOfDay(app.now) >= app.me.settings.reportAt && (
-        <Link href={`${app.base}/report`} className="report-call">
-          <span>
-            <strong>Today’s report is ready.</strong> Focus score {sum.score === null ? '–' : `${sum.score}%`}.
-          </span>
-          <span className="link">See the verdict</span>
-        </Link>
-      )}
-
-      {gaps.length > 0 && (
-        <button className="gap-call" onClick={() => pick(gaps[0])}>
-          <span className="gap-dots" aria-hidden="true" />
-          <span>
-            <strong>
-              {gaps.length === 1 ? 'One gap' : `${gaps.length} gaps`} in {isToday ? 'today’s' : 'this day’s'} thread.
-            </strong>{' '}
-            <span className="num">{fmtDur(sum.gapMin)}</span> unaccounted for.
-          </span>
-          <span className="gap-go">Close {gaps.length === 1 ? 'it' : 'them'}</span>
-        </button>
+      {(gaps.length > 0 || reportReady) && (
+        <p className="notes">
+          {gaps.length > 0 && (
+            <button type="button" className="note note-gap" onClick={() => pick(gaps[0])}>
+              <span className="gap-dots" aria-hidden="true" />
+              {gaps.length === 1 ? 'Close 1 gap' : `Close ${gaps.length} gaps`}
+            </button>
+          )}
+          {reportReady && (
+            <Link href={`${app.base}/report`} className="note">
+              Today’s report is ready
+              <Icon name="right" size={15} />
+            </Link>
+          )}
+        </p>
       )}
 
       {!app.ready ? (
